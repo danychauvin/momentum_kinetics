@@ -1,0 +1,26 @@
+---
+title: "data_analysis.Rmd"
+author: "Dany Chauvin"
+date: "2/4/2021"
+output: html_document
+---
+
+# Importing modules and functions
+
+```{r}
+source("/scicore/home/nimwegen/schdav16/Projects/constitexpr/code/momentum_kinetics/load_packages_functions.R")
+```
+
+# Importing data
+
+```{r}
+path_to_data_list <- "/scicore/home/nimwegen/schdav16/Projects/constitexpr/code/momentum_kinetics/dataList.csv"
+source("/scicore/home/nimwegen/schdav16/Projects/constitexpr/code/momentum_kinetics/import_data.R")
+```
+
+# Analyse data
+
+```{r}
+  
+
+```

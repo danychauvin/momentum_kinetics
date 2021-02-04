@@ -1,0 +1,21 @@
+Type: condition,,,,,,,,,,,,
+,1,2,3,4,5,6,7,8,9,10,11,12
+A,acetate,acetate,acetate,acetate,acetate,acetate,acetate,acetate,acetate,acetate,acetate,acetate
+B,arabinose,arabinose,arabinose,arabinose,arabinose,arabinose,arabinose,arabinose,arabinose,arabinose,arabinose,arabinose
+C,glucose,glucose,glucose,glucose,glucose,glucose,glucose,glucose,glucose,glucose,glucose,glucose
+D,glycerol,glycerol,glycerol,glycerol,glycerol,glycerol,glycerol,glycerol,glycerol,glycerol,glycerol,glycerol
+E,lactose,lactose,lactose,lactose,lactose,lactose,lactose,lactose,lactose,lactose,lactose,lactose
+F,maltose,maltose,maltose,maltose,maltose,maltose,maltose,maltose,maltose,maltose,maltose,maltose
+G,mannose,mannose,mannose,mannose,mannose,mannose,mannose,mannose,mannose,mannose,mannose,mannose
+H,xylose,xylose,xylose,xylose,xylose,xylose,xylose,xylose,xylose,xylose,xylose,xylose
+,,,,,,,,,,,,
+Type: strain,,,,,,,,,,,,
+,1,2,3,4,5,6,7,8,9,10,11,12
+A,A3,B4,B5,B8,C6,C11,E3,E8,F3,F9,H1,K12
+B,A3,B4,B5,B8,C6,C11,E3,E8,F3,F9,H1,K12
+C,A3,B4,B5,B8,C6,C11,E3,E8,F3,F9,H1,K12
+D,A3,B4,B5,B8,C6,C11,E3,E8,F3,F9,H1,K12
+E,A3,B4,B5,B8,C6,C11,E3,E8,F3,F9,H1,K12
+F,A3,B4,B5,B8,C6,C11,E3,E8,F3,F9,H1,K12
+G,A3,B4,B5,B8,C6,C11,E3,E8,F3,F9,H1,K12
+H,A3,B4,B5,B8,C6,C11,E3,E8,F3,F9,H1,K12
