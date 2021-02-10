@@ -1,0 +1,3 @@
+date,description,plate,data_path,plate_map_path
+20210203,20210203testrunmomentum,pl1,/scicore/home/nimwegen/schdav16/Projects/constitexpr/code/momentum_kinetics/dummy_data,/scicore/home/nimwegen/schdav16/Projects/constitexpr/code/momentum_kinetics/dummy_plate_maps/pl1_20210203_map.csv
+20210203,20210203testrunmomentum,pl2,/scicore/home/nimwegen/schdav16/Projects/constitexpr/code/momentum_kinetics/dummy_data,/scicore/home/nimwegen/schdav16/Projects/constitexpr/code/momentum_kinetics/dummy_plate_maps/pl2_20210203_map.csv
