@@ -1,0 +1,234 @@
+# Manual curation of 96 well plates data
+# David Schar, Dany Chauvin
+# 20210302
+
+# Loading packages and functions
+
+```{r message=FALSE, warning=FALSE}
+source("./load_packages_functions.R")
+source("./modeling_functions.R")
+source("./inference_functions.R")
+```
+
+# Import curated data
+
+```{r message=FALSE, warning=FALSE}
+path_to_curated_data <- "./curated_data"
+mydata_curated <- do.call(rbind, lapply(list.files(path_to_curated_data,pattern=".csv",full.names=TRUE), readr::read_csv)) %>% 
+    filter((grepl("p2-",strain))|(grepl("p3-",strain))|(grepl("pl-",strain)))
+```
+
+First we'll focus on data obtained for non control strain, with plasmids. We focus on each well.
+
+# ACETATE
+
+```{r}
+min_corrected_od <- 0.05
+max_corrected_od <- 0.2
+cond <- "acetate"
+```
+
+```{r}
+source("./run_inference.R")
+```
+
+```{r}
+mydata_inferred_ace <- mydata_curated_cond %>% 
+  inner_join(mydata_inference,by=c("exp_start_date","well"))
+  #distinct(well,.keep_all = TRUE)
+
+mydata_inferred_ace %>% 
+  distinct(strain,.keep_all=TRUE) %>% 
+  ggplot()+
+  stat_ecdf(aes(alpha_tot_predict))+
+  theme_cowplot()
+```
+
+```{r}
+for(w in unique(mydata_inferred_ace$well)[1:10]){
+print(mydata_inferred_ace %>%
+    filter(well==w) %>%
+    ggplot() +
+    geom_point(aes(corrected_od,fluo),alpha=0.2,col="black")+
+    geom_point(aes(corrected_od,corrected_od*alpha_tot_predict+beta_predict_ite),col="red")+
+    xlab("log(c_od)")+
+    ylab("fluo")+theme_cowplot()
+    )}
+```
+
+# GLYCEROL
+
+```{r}
+min_corrected_od <- 0.05
+max_corrected_od <- 0.4
+cond <- "glycerol"
+```
+
+```{r}
+source("./run_inference.R")
+```
+
+```{r}
+mydata_inferred_gly <- mydata_curated_cond %>% 
+  inner_join(mydata_inference,by=c("exp_start_date","well"))
+  #distinct(well,.keep_all = TRUE)
+
+mydata_inferred_gly %>% 
+  distinct(strain,.keep_all=TRUE) %>% 
+  ggplot()+
+  stat_ecdf(aes(alpha_tot_predict))+
+  theme_cowplot()
+```
+
+```{r}
+for(w in unique(mydata_inferred_gly$well)[1:10]){
+print(mydata_inferred_gly %>%
+    filter(well==w) %>%
+    ggplot() +
+    geom_point(aes(corrected_od,fluo),alpha=0.2,col="black")+
+    geom_point(aes(corrected_od,corrected_od*alpha_tot_predict+beta_predict_ite),col="red")+
+    xlab("log(c_od)")+
+    ylab("fluo")+theme_cowplot()
+    )}
+```
+
+# GLUCOSE
+
+```{r}
+min_corrected_od <- 0.05
+max_corrected_od <- 0.45
+cond <- "glucose"
+```
+
+```{r}
+source("./run_inference.R")
+```
+
+```{r}
+mydata_inferred_glu <- mydata_curated_cond %>% 
+  inner_join(mydata_inference,by=c("exp_start_date","well"))
+  #distinct(well,.keep_all = TRUE)
+
+mydata_inferred_glu %>% 
+  distinct(strain,.keep_all=TRUE) %>% 
+  ggplot()+
+  stat_ecdf(aes(alpha_tot_predict))+
+  theme_cowplot()
+```
+
+```{r}
+for(w in unique(mydata_inferred_glu$well)[1:10]){
+print(mydata_inferred_glu %>%
+    filter(well==w) %>%
+    ggplot() +
+    geom_point(aes(corrected_od,fluo),alpha=0.2,col="black")+
+    geom_point(aes(corrected_od,corrected_od*alpha_tot_predict+beta_predict_ite),col="red")+
+    xlab("log(c_od)")+
+    ylab("fluo")+theme_cowplot()
+    )}
+```
+
+# GLUCOSEAA
+
+```{r}
+min_corrected_od <- 0.05
+max_corrected_od <- 0.65
+cond <- "glucoseaa"
+```
+
+```{r}
+source("./run_inference.R")
+```
+
+```{r}
+mydata_inferred_gluaa <- mydata_curated_cond %>% 
+  inner_join(mydata_inference,by=c("exp_start_date","well"))
+  #distinct(well,.keep_all = TRUE)
+
+mydata_inferred_gluaa %>% 
+  distinct(strain,.keep_all=TRUE) %>% 
+  ggplot()+
+  stat_ecdf(aes(alpha_tot_predict))+
+  theme_cowplot()
+```
+
+```{r}
+for(w in unique(mydata_inferred_gluaa$well)[1:10]){
+print(mydata_inferred_gluaa %>%
+    filter(well==w) %>%
+    ggplot() +
+    geom_point(aes(corrected_od,fluo),alpha=0.2,col="black")+
+    geom_point(aes(corrected_od,corrected_od*alpha_tot_predict+beta_predict_ite),col="red")+
+    xlab("log(c_od)")+
+    ylab("fluo")+theme_cowplot()
+    )}
+```
+
+# All data together testrun2
+
+```{r}
+mydata_inferred_all <- rbind(
+  mydata_inferred_ace %>% 
+    distinct(well,.keep_all = TRUE),
+  
+  mydata_inferred_gly %>% 
+    distinct(well,.keep_all = TRUE),
+
+  mydata_inferred_glu%>% 
+    distinct(well,.keep_all = TRUE),
+  
+  mydata_inferred_gluaa %>% 
+    distinct(well,.keep_all = TRUE))
+```
+
+```{r message=FALSE, warning=FALSE}
+gr_df <- tibble(gr=c(0.2,0.5,1,2),condition=c("acetate","glycerol","glucose","glucoseaa"))
+
+mydata_inferred_all %>% 
+  left_join(gr_df,by=c("condition")) %>% 
+  filter(grepl("p2-",strain)) %>% 
+  ggplot()+
+  geom_point(aes(gr,alpha_tot_predict,col=condition))+
+  geom_errorbar(aes(x=gr,ymin=alpha_tot_predict-sd_alpha_tot,ymax=alpha_tot_predict+sd_alpha_tot))+
+  theme_cowplot()+
+  xlab("Doublings per hour")+
+  ylab("alpha (GFP + autofluorescence)")
+  #facet_wrap(~well,scales="free")
+```
+
+```{r,message=FALSE,warning=FALSE}
+mystrain <- unique(mydata_inferred_all$strain)
+
+mydata_inferred_all %>%
+  arrange(strain) %>% 
+  left_join(gr_df,by=c("condition")) %>% 
+  #filter(grepl("p2-",strain)) %>% 
+  ggplot()+
+  geom_point(aes(gr,alpha_tot_predict,col=condition),size=2)+
+  geom_errorbar(aes(x=gr,ymin=alpha_tot_predict-sd_alpha_tot,ymax=alpha_tot_predict+sd_alpha_tot))+
+  theme_cowplot()+
+  xlab("Doublings per hour")+
+  ylab("alpha (GFP + autofluorescence)")+
+  facet_wrap(~strain,scales="free")+
+  theme(strip.text = element_text(size = 10))+
+    ggsave(sprintf("~/Documents/all.pdf",as.character(i)),width=12*10,height=7*10,dpi=100,limitsize = FALSE)
+```
+
+
+
+```{r}
+mydata_inferred_all %>%
+  filter(strain=="p2-A7") %>% 
+  left_join(gr_df,by=c("condition")) %>% 
+  #filter(grepl("p2-",strain)) %>% 
+  ggplot()+
+  geom_point(aes(gr,alpha_tot_predict,col=condition),size=2)+
+  geom_errorbar(aes(x=gr,ymin=alpha_tot_predict-sd_alpha_tot,ymax=alpha_tot_predict+sd_alpha_tot))+
+  theme_cowplot()+
+  xlab("Doublings per hour")+
+  ylab("alpha (GFP + autofluorescence)")+
+  facet_wrap(~strain,scales="free")+
+  theme(strip.text = element_text(size = 10))+
+    ggsave(sprintf("~/Documents/test.pdf",as.character(i)),width=12,height=7,dpi=100)
+```
+
