@@ -1,9 +1,10 @@
-#Beginning of the script
+#Start manual curation by running the following loop
+#Beginning of the loop
 for(w in unique(raw_data$well)){
   
   r <- raw_data %>% 
     filter(well==w)
-  e <- exp_growth_data %>% 
+  e <- mydata_exp_growth %>% 
     filter(well==w)
   fo <- raw_data_fluo_od %>% 
     filter(well==w)
@@ -71,7 +72,7 @@ for(w in unique(raw_data$well)){
     ylab("fluo")
   
   title <- ggplot()+
-    draw_label(paste(w,unique(r$condition),sep=" "),size=15)
+    draw_label(paste(w,unique(r$condition),sep="_"),size=15)
   titletxt <- paste(w,unique(r$condition))
   
   pg <- plot_grid(p1,p2,p3,p4, labels =c("A","B","C","D"))
@@ -79,19 +80,11 @@ for(w in unique(raw_data$well)){
   print(pgg)
   
   good <- readline(prompt=sprintf("Is %s Valid?",titletxt))
+  ggsave(sprintf("./curated_figures/%s_%s.png",good,titletxt))
   
   raw_data <- raw_data %>% 
     mutate(valid=ifelse(well==w,good,valid))
 }
-
-for(w in unique(mydata_inferred_ace$well)){
-  print(mydata_inferred_ace %>%
-          filter(well==w) %>%
-          ggplot() +
-          geom_point(aes(corrected_od,fluo),alpha=0.2,col="black")+
-          geom_point(aes(corrected_od,corrected_od*alpha_tot_predict+beta_predict_ite),col="red")+
-          xlab("log(c_od)")+
-          ylab("fluo"))}
-
+# End of the loop
 
 
