@@ -14,8 +14,7 @@ source("./inference_functions.R")
 
 ```{r message=FALSE, warning=FALSE}
 path_to_curated_data <- "./curated_data"
-mydata_curated <- do.call(rbind, lapply(list.files(path_to_curated_data,pattern=".csv",full.names=TRUE), readr::read_csv)) %>% 
-    filter((grepl("p2-",strain))|(grepl("p3-",strain))|(grepl("pl-",strain)))
+mydata_curated <- do.call(rbind, lapply(list.files(path_to_curated_data,pattern=".csv",full.names=TRUE), readr::read_csv))
 ```
 
 First we'll focus on data obtained for non control strain, with plasmids. We focus on each well.
@@ -210,17 +209,25 @@ mydata_inferred_all %>%
   xlab("Doublings per hour")+
   ylab("alpha (GFP + autofluorescence)")+
   facet_wrap(~strain,scales="free")+
-  theme(strip.text = element_text(size = 10))+
+  theme(strip.text = element_text(size = 20))+
     ggsave(sprintf("~/Documents/all.pdf",as.character(i)),width=12*10,height=7*10,dpi=100,limitsize = FALSE)
 ```
 
+```{r,message=FALSE,warning=FALSE}
+mystrain <- unique(mydata_inferred_all$strain)
+
+mydata_inferred_control <- mydata_inferred_all %>% 
+  filter(strain=="MG1655") %>% 
+  group_by(condition) %>% 
+  distinct(well,.keep_all = TRUE) %>% 
+  mutate(alpha_0=mean(alpha_tot_predict)) %>% 
+  mutate(alpha_0_sd=)
 
 
-```{r}
-mydata_inferred_all %>%
-  filter(strain=="p2-A7") %>% 
+
+  arrange(strain) %>% 
   left_join(gr_df,by=c("condition")) %>% 
-  #filter(grepl("p2-",strain)) %>% 
+  #filter(grepl("p2-",strain)) %>%
   ggplot()+
   geom_point(aes(gr,alpha_tot_predict,col=condition),size=2)+
   geom_errorbar(aes(x=gr,ymin=alpha_tot_predict-sd_alpha_tot,ymax=alpha_tot_predict+sd_alpha_tot))+
@@ -228,7 +235,7 @@ mydata_inferred_all %>%
   xlab("Doublings per hour")+
   ylab("alpha (GFP + autofluorescence)")+
   facet_wrap(~strain,scales="free")+
-  theme(strip.text = element_text(size = 10))+
-    ggsave(sprintf("~/Documents/test.pdf",as.character(i)),width=12,height=7,dpi=100)
+  theme(strip.text = element_text(size = 20))+
+    ggsave(sprintf("~/Documents/all.pdf",as.character(i)),width=12*10,height=7*10,dpi=100,limitsize = FALSE)
 ```
 

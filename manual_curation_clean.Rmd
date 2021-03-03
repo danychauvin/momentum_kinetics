@@ -171,11 +171,22 @@ min_corrected_od <- 0.05
 max_corrected_od <- 0.2
 
 raw_data_fluo_od <- mydata %>% 
-  filter(between(corrected_od,min_corrected_od,max_corrected_od)) %>% 
+  #filter(between(corrected_od,min_corrected_od,max_corrected_od)) %>% 
   filter(condition==cond) %>% 
   filter(!grepl("empty",strain)) %>% #filter out empty wells
   filter(max(od)>min_corrected_od) %>% #to get rid of wells in which there are no growth at all 
-  filter(time_min/60<30)
+  filter(time_min/60<30) %>% 
+  group_by(well) %>%
+  arrange(time_min) %>% 
+  mutate(above_max_time=ifelse(corrected_od>=max_corrected_od,time_min,NA)) %>% 
+  mutate(time_limit=min(c(above_max_time,Inf),na.rm=TRUE)) %>% 
+  filter(time_min<time_limit) %>% 
+  mutate(below_min_time=ifelse(corrected_od<=min_corrected_od,time_min,NA)) %>% 
+  mutate(time_limit=max(c(below_min_time,-Inf),na.rm=TRUE)) %>% 
+  filter(time_min>time_limit) %>% 
+  ungroup() %>% 
+  select(-c(above_max_time,time_limit,below_min_time))
+
 ```
 
 ### Performing the manual curation
@@ -274,11 +285,21 @@ min_corrected_od <- 0.05
 max_corrected_od <- 0.4
 
 raw_data_fluo_od <- mydata %>% 
-  filter(between(corrected_od,min_corrected_od,max_corrected_od)) %>% 
+  #filter(between(corrected_od,min_corrected_od,max_corrected_od)) %>% 
   filter(condition==cond) %>% 
   filter(!grepl("empty",strain)) %>% #filter out empty wells
   filter(max(od)>min_corrected_od) %>% #to get rid of wells in which there are no growth at all 
-  filter(time_min/60<30)
+  filter(time_min/60<30) %>% 
+  group_by(well) %>%
+  arrange(time_min) %>% 
+  mutate(above_max_time=ifelse(corrected_od>=max_corrected_od,time_min,NA)) %>% 
+  mutate(time_limit=min(c(above_max_time,Inf),na.rm=TRUE)) %>% 
+  filter(time_min<time_limit) %>% 
+  mutate(below_min_time=ifelse(corrected_od<=min_corrected_od,time_min,NA)) %>% 
+  mutate(time_limit=max(c(below_min_time,-Inf),na.rm=TRUE)) %>% 
+  filter(time_min>time_limit) %>% 
+  ungroup() %>% 
+  select(-c(above_max_time,time_limit,below_min_time))
 ```
 
 ### Performing the manual curation
@@ -377,11 +398,21 @@ min_corrected_od <- 0.05
 max_corrected_od <- 0.5
 
 raw_data_fluo_od <- mydata %>% 
-  filter(between(corrected_od,min_corrected_od,max_corrected_od)) %>% 
+  #filter(between(corrected_od,min_corrected_od,max_corrected_od)) %>% 
   filter(condition==cond) %>% 
   filter(!grepl("empty",strain)) %>% #filter out empty wells
   filter(max(od)>min_corrected_od) %>% #to get rid of wells in which there are no growth at all 
-  filter(time_min/60<30)
+  filter(time_min/60<30) %>% 
+  group_by(well) %>%
+  arrange(time_min) %>% 
+  mutate(above_max_time=ifelse(corrected_od>=max_corrected_od,time_min,NA)) %>% 
+  mutate(time_limit=min(c(above_max_time,Inf),na.rm=TRUE)) %>% 
+  filter(time_min<time_limit) %>% 
+  mutate(below_min_time=ifelse(corrected_od<=min_corrected_od,time_min,NA)) %>% 
+  mutate(time_limit=max(c(below_min_time,-Inf),na.rm=TRUE)) %>% 
+  filter(time_min>time_limit) %>% 
+  ungroup() %>% 
+  select(-c(above_max_time,time_limit,below_min_time))
 ```
 
 ### Performing the manual curation
@@ -480,11 +511,21 @@ min_corrected_od <- 0.05
 max_corrected_od <- 0.75
 
 raw_data_fluo_od <- mydata %>% 
-  filter(between(corrected_od,min_corrected_od,max_corrected_od)) %>% 
+  #filter(between(corrected_od,min_corrected_od,max_corrected_od)) %>% 
   filter(condition==cond) %>% 
   filter(!grepl("empty",strain)) %>% #filter out empty wells
   filter(max(od)>min_corrected_od) %>% #to get rid of wells in which there are no growth at all 
-  filter(time_min/60<30)
+  filter(time_min/60<30) %>% 
+  group_by(well) %>%
+  arrange(time_min) %>% 
+  mutate(above_max_time=ifelse(corrected_od>=max_corrected_od,time_min,NA)) %>% 
+  mutate(time_limit=min(c(above_max_time,Inf),na.rm=TRUE)) %>% 
+  filter(time_min<time_limit) %>% 
+  mutate(below_min_time=ifelse(corrected_od<=min_corrected_od,time_min,NA)) %>% 
+  mutate(time_limit=max(c(below_min_time,-Inf),na.rm=TRUE)) %>% 
+  filter(time_min>time_limit) %>% 
+  ungroup() %>% 
+  select(-c(above_max_time,time_limit,below_min_time))
 ```
 
 ### Performing the manual curation
