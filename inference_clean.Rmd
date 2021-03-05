@@ -23,7 +23,7 @@ First we'll focus on data obtained for non control strain, with plasmids. We foc
 
 ```{r}
 min_corrected_od <- 0.05
-max_corrected_od <- 0.2
+max_corrected_od <- 0.15
 cond <- "acetate"
 ```
 

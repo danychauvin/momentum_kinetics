@@ -41,8 +41,8 @@ library(here)
 library(cowplot)
 library(devtools)
 library(multidplyr)
-#library(vngMoM)
-#library(ggCustomTJ)
+library(vngMoM)
+library(ggCustomTJ)
 library(renv)
 library(svglite)
 #Sys.setenv(RETICULATE_PYTHON = '/scicore/home/nimwegen/rocasu25/.local/share/r-miniconda/envs/r-reticulate/bin/python')
@@ -84,8 +84,8 @@ read_Biotek_Synergy2_kinetic <- function(.path) {
   
   .formatted_od_values <- lapply(.od_values,noFirstnoLast) %>% unlist()
   .formatted_fluo_values <- lapply(.fluo_values,noFirstnoSecondLast) %>% unlist()
-  .cols <- rep(LETTERS[c(1:8)],each=12)
-  .rows <- rep(c(1:12),times=8)
+  .rows <- rep(LETTERS[c(1:8)],each=12)
+  .cols <- rep(c(1:12),times=8)
   new_df <- data_frame(row=.rows,column=.cols,od=.formatted_od_values,fluo=.formatted_fluo_values,measurement_date=.measurement_date,measurement_time=.measurement_time,od_channel=.od_ch,fluo_channel=.fluo_ch)
 }
 
@@ -106,8 +106,8 @@ read_plate_layout <- function(.path) {
     .col_title <- str_match(.lines[[.index]],"Type: ([a-zA-Z0-9]{1,}),,,,,,,,,,,,$")[[2]]
     .data <- .lines[c((.index+2):(.index+9))]
     .values <- lapply(.data,noFirst) %>% unlist()
-    .cols <- rep(LETTERS[c(1:8)],each=12)
-    .rows <- rep(c(1:12),times=8)
+    .rows <- rep(LETTERS[c(1:8)],each=12)
+    .cols <- rep(c(1:12),times=8)
     new_df <- data_frame(row=.rows,column=.cols,values=.values,type=rep(c(.col_title),each=96))
     return(new_df)}
   

@@ -12,7 +12,7 @@ source("./modeling_functions.R")
 Here data of your choice can be imported, by providing correct paths. Here importing data which are stored in `path_to_data_list`.
 
 ```{r message=FALSE, warning=FALSE}
-path_to_data_list <- "/scicore/home/nimwegen/rocasu25/Documents/Projects/biozentrum/constitexpr/20210208_constitexpr_testrun2/dataList.csv"
+path_to_data_list <- "./dataList.csv" #only glu and gluaa, from david
 source("./import_data.R")
 ```
 # Preparing the data for manual curation
@@ -30,7 +30,26 @@ Ideally, the blank should be computed well per well, but this can be difficult i
 
 The same should be done for the fluorescence of empty wells. Here copy pasting the values that I got from testrun2.
 
+Let's find out blank levels...
+
 ```{r}
+mydata %>% 
+  filter(strain=="empty") %>% 
+  ggplot()+
+  geom_point(aes(time_min,od))+
+  facet_wrap(~well,scale="free")+
+  theme_cowplot()
+
+# There we can keep only A and E.
+
+mean_blank_od <- mydata %>% 
+  filter(strain=="empty") %>% 
+  filter(row %in% c("A","E")) %>% 
+  mutate(mean_blank_od=mean(od)) %>% 
+  mutate(sd_blank_od=sd(od)) %>% 
+  filter(!between(od,mean_blank_od-2*sd_blank_od,mean_blank_od+2*sd_blank_od)) %>% 
+  mutate(mean_blank_od=mean(od))
+
 mean_blank_od <- 0.03840125
 mydata <- mydata %>% 
   mutate(corrected_od=od-mean_blank_od)
