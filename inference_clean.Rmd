@@ -218,24 +218,58 @@ mystrain <- unique(mydata_inferred_all$strain)
 
 mydata_inferred_control <- mydata_inferred_all %>% 
   filter(strain=="MG1655") %>% 
-  group_by(condition) %>% 
   distinct(well,.keep_all = TRUE) %>% 
-  mutate(alpha_0=mean(alpha_tot_predict)) %>% 
-  mutate(alpha_0_sd=)
+  group_by(condition) %>% 
+  mutate(p=n()) %>% 
+  mutate(alpha_0_mean=mean(alpha_tot_predict)) %>% 
+  mutate(alpha_0_sd=1/p*sqrt(sum(sd_alpha_tot**2))) %>% 
+  ungroup() %>% 
+  distinct(condition,.keep_all=TRUE) %>% 
+  select(condition,alpha_0_mean,alpha_0_sd)
+```
 
+```{r}
+mydata_inferred_all_control <- mydata_inferred_all %>%
+  left_join(mydata_inferred_control,by=c("condition")) %>% 
+  mutate(alpha_gfp=alpha_tot_predict-alpha_0_mean,
+         sd_alpha_gfp=sqrt(sd_alpha_tot**2+alpha_0_sd**2))
+```
 
-
+```{r}
+mydata_inferred_all_control %>%
   arrange(strain) %>% 
   left_join(gr_df,by=c("condition")) %>% 
-  #filter(grepl("p2-",strain)) %>%
   ggplot()+
-  geom_point(aes(gr,alpha_tot_predict,col=condition),size=2)+
-  geom_errorbar(aes(x=gr,ymin=alpha_tot_predict-sd_alpha_tot,ymax=alpha_tot_predict+sd_alpha_tot))+
+  geom_point(aes(gr,alpha_gfp,col=condition),size=3)+
+  geom_errorbar(aes(x=gr,ymin=alpha_gfp-sd_alpha_gfp,ymax=alpha_gfp+sd_alpha_gfp))+
   theme_cowplot()+
   xlab("Doublings per hour")+
-  ylab("alpha (GFP + autofluorescence)")+
+  ylab("alpha (GFP)")+
   facet_wrap(~strain,scales="free")+
   theme(strip.text = element_text(size = 20))+
-    ggsave(sprintf("~/Documents/all.pdf",as.character(i)),width=12*10,height=7*10,dpi=100,limitsize = FALSE)
+    ggsave(sprintf("./all_gfp.pdf",as.character(i)),width=12*10,height=7*10,dpi=100,limitsize = FALSE)
+```
+
+```{r}
+mydata_inferred_all_control %>%
+  arrange(strain) %>% 
+  left_join(gr_df,by=c("condition")) %>% 
+  mutate(gr_min=gr*log(2)/60) %>% 
+  ggplot()+
+  geom_point(aes(gr,alpha_gfp*gr_min,col=condition),size=3)+
+  geom_errorbar(aes(x=gr,ymin=gr_min*(alpha_gfp-sd_alpha_gfp),ymax=gr_min*(alpha_gfp+sd_alpha_gfp)))+
+  theme_cowplot()+
+  xlab("Doublings per hour")+
+  ylab("alpha (GFU/OD/min)")+
+  facet_wrap(~strain,scales="free")+
+  theme(strip.text = element_text(size = 20))+
+    ggsave(sprintf("./all_prod_gfp.pdf",as.character(i)),width=12*10,height=7*10,dpi=100,limitsize = FALSE)
+```
+
+# Save the data for future analysis
+
+```{r}
+mydata_inferred_all_control %>% 
+  readr::write_csv("./20210210_inference_results.csv")
 ```
 
